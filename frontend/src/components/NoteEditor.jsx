@@ -4,33 +4,29 @@ import { SocketContext } from '../contexts/SocketContext';
 import { UserContext } from '../contexts/UserContext';
 
 const NoteEditor = () => {
-  const { id } = useParams(); // Room/note ID from URL
+  const { id } = useParams();
   const socket = useContext(SocketContext);
   const { username } = useContext(UserContext);
   const [content, setContent] = useState('');
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    // Fetch initial note content
-    fetch(`https://real-time-notes-app.onrender.com/api/notes/${id}`) // Replace with your new Render URL
+    fetch(`https://real-time-notes-app.onrender.com/api/notes/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to fetch note: ${res.status}`);
         return res.json();
       })
-      .then((data) => setContent(data.content || '')) // Default to empty string if no content
+      .then((data) => setContent(data.content || ''))
       .catch((err) => console.error('Error fetching note:', err));
 
-    // Connect socket and join room
     socket.connect();
     socket.emit('join', { room: id, username });
 
-    // Listen for real-time events
     socket.on('edit', (newContent) => setContent(newContent));
     socket.on('current users', (userList) => setUsers(userList));
     socket.on('user joined', (newUser) => setUsers((prev) => [...prev, newUser]));
     socket.on('user left', (leftUser) => setUsers((prev) => prev.filter((u) => u !== leftUser)));
 
-    // Cleanup on unmount
     return () => {
       socket.disconnect();
       socket.off('edit');
@@ -53,7 +49,7 @@ const NoteEditor = () => {
         value={content}
         onChange={handleChange}
         style={{ width: '100%', height: '200px', marginBottom: '20px' }}
-        placeholder="Start typing..." // Added for better UX
+        placeholder="Start typing..."
       />
       <h3>Online Users:</h3>
       <ul>
