@@ -11,7 +11,6 @@ const NoteEditor = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    // Fetch initial note content
     fetch(`https://real-time-notes-app.onrender.com/api/notes/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to fetch note: ${res.status}`);
@@ -20,17 +19,14 @@ const NoteEditor = () => {
       .then((data) => setContent(data.content || ''))
       .catch((err) => console.error('Error fetching note:', err));
 
-    // Connect socket and join room
     socket.connect();
     socket.emit('join', { room: id, username });
 
-    // Listen for real-time events
     socket.on('edit', (newContent) => setContent(newContent));
     socket.on('current users', (userList) => setUsers(userList));
     socket.on('user joined', (newUser) => setUsers((prev) => [...prev, newUser]));
     socket.on('user left', (leftUser) => setUsers((prev) => prev.filter((u) => u !== leftUser)));
 
-    // Cleanup on unmount
     return () => {
       socket.disconnect();
       socket.off('edit');
