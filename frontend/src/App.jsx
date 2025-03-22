@@ -8,20 +8,21 @@ function Home() {
   const navigate = useNavigate();
 
   const createNewNote = async () => {
-    console.log('Button clicked!'); // Debug to confirm click
+    console.log('Button clicked!');
     try {
       console.log('Fetching from: https://real-time-notes-app.onrender.com/api/notes');
       const response = await fetch('https://real-time-notes-app.onrender.com/api/notes', {
         method: 'POST',
       });
-      console.log('Response status:', response.status); // Debug response
-      if (!response.ok) throw new Error('Failed to create note');
+      console.log('Response status:', response.status);
+      if (!response.ok) throw new Error(`Failed to create note: ${response.status}`);
       const data = await response.json();
-      console.log('New note ID:', data._id); // Debug new ID
+      console.log('New note ID:', data._id);
       navigate(`/notes/${data._id}`);
+      console.log('Navigated to:', `/notes/${data._id}`);
     } catch (error) {
-      console.error('Error creating note:', error);
-      alert('Failed to create a new note. Please try again.');
+      console.error('Error creating note:', error.message);
+      alert('Failed to create a new note: ' + error.message);
     }
   };
 
