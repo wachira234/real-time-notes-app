@@ -70,7 +70,7 @@ io.on('connection', (socket) => {
   socket.on('join', ({ room, username }) => {
     console.log(`Socket ${socket.id} joining room: ${room} as ${username}`);
     socket.join(room);
-    socket.username = username; // Store username on socket
+    socket.username = username;
     if (!rooms.has(room)) rooms.set(room, new Set());
     rooms.get(room).add(username);
     io.to(room).emit('current users', Array.from(rooms.get(room)));
@@ -81,7 +81,6 @@ io.on('connection', (socket) => {
   socket.on('edit', async ({ room, content }) => {
     console.log(`Edit in room ${room}: ${content}`);
     socket.to(room).emit('edit', content);
-    // Optionally save to MongoDB
     try {
       await Note.findByIdAndUpdate(room, { content }, { new: true });
       console.log(`Note ${room} updated in DB`);
