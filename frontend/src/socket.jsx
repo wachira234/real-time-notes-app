@@ -1,2 +1,2 @@
 import { io } from 'socket.io-client';
-export const socket = io('https://real-time-communication-with-socket-io.vercel.app', { autoConnect: false });
+export const socket = io('https://real-time-notes-backend-6qdj.onrender.com', { autoConnect: false });

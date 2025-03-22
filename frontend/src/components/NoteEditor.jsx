@@ -4,7 +4,7 @@ import { SocketContext } from '../contexts/SocketContext';
 import { UserContext } from '../contexts/UserContext';
 
 const NoteEditor = () => {
-  const { id } = useParams(); // Gets note ID from URL (e.g., 67defa9ebad91304ad2acd76)
+  const { id } = useParams(); // Room/note ID from URL
   const socket = useContext(SocketContext);
   const { username } = useContext(UserContext);
   const [content, setContent] = useState('');
@@ -13,11 +13,8 @@ const NoteEditor = () => {
   useEffect(() => {
     // Fetch initial note content
     fetch(`https://real-time-notes-backend-6qdj.onrender.com/api/notes/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`Failed to fetch note: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => setContent(data.content || '')) // Default to empty string if no content
+      .then((res) => res.json())
+      .then((data) => setContent(data.content))
       .catch((err) => console.error('Error fetching note:', err));
 
     // Connect socket and join room
@@ -53,7 +50,6 @@ const NoteEditor = () => {
         value={content}
         onChange={handleChange}
         style={{ width: '100%', height: '200px', marginBottom: '20px' }}
-        placeholder="Start typing..."
       />
       <h3>Online Users:</h3>
       <ul>
