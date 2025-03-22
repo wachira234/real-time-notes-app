@@ -1,10 +1,13 @@
-import React, { createContext } from 'react';
-import { socket } from '../socket';
+import React, { createContext, useContext } from 'react';
+import { io } from 'socket.io-client';
 
-export const SocketContext = createContext(socket);
+const SocketContext = createContext();
 
-export const SocketProvider = ({ children }) => (
-  <SocketContext.Provider value={socket}>
-    {children}
-  </SocketContext.Provider>
-);
+export const SocketProvider = ({ children }) => {
+  const socket = io('https://real-time-notes-app.onrender.com', { autoConnect: false });
+  return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
+};
+
+export const useSocket = () => useContext(SocketContext);
+
+export default SocketContext;

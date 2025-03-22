@@ -1,12 +1,12 @@
 import React, { createContext, useState } from 'react';
 
-export const UserContext = createContext();
+const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [username, setUsername] = useState(`User${Math.floor(Math.random() * 10000)}`);
-  return (
-    <UserContext.Provider value={{ username, setUsername }}>
-      {children}
-    </UserContext.Provider>
-  );
+  const [username] = useState('User' + Math.floor(Math.random() * 1000));
+  return <UserContext.Provider value={{ username }}>{children}</UserContext.Provider>;
 };
+
+export const useUser = () => useContext(UserContext);
+
+export default UserContext;
