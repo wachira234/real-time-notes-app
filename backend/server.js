@@ -11,24 +11,15 @@ const server = http.createServer(app);
 
 const io = socketIo(server, {
   cors: {
-    origin: ["https://real-time-communication-with-socket-io.vercel.app/"],
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"]
   }
 });
 
-
 app.use(cors());
 app.use(express.json());
 
-const mongoUri = process.env.MONGODB_URI;
-
-if (!mongoUri) {
-  console.error('MongoDB URI is not defined. Please set the MONGODB_URI environment variable.');
-  process.exit(1); // Exit the application if the URI is not defined
-}
-
-mongoose.connect(mongoUri);
-
+mongoose.connect(process.env.MONGODB_URI);
 
 mongoose.connection.on('connected', () => {
   console.log('Connected to MongoDB Atlas');
