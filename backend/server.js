@@ -20,7 +20,15 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URI);
+const mongoUri = process.env.MONGODB_URI;
+
+if (!mongoUri) {
+  console.error('MongoDB URI is not defined. Please set the MONGODB_URI environment variable.');
+  process.exit(1); // Exit the application if the URI is not defined
+}
+
+mongoose.connect(mongoUri);
+
 
 mongoose.connection.on('connected', () => {
   console.log('Connected to MongoDB Atlas');
