@@ -12,7 +12,7 @@ const NoteEditor = () => {
 
   useEffect(() => {
     // Fetch initial note content
-    fetch(`https://real-time-notes-backend-6qdj.onrender.com/api/notes/${id}`)
+    fetch(`https://real-time-notes-app.onrender.com/api/notes/${id}`)
       .then((res) => res.json())
       .then((data) => setContent(data.content))
       .catch((err) => console.error('Error fetching note:', err));
